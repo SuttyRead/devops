@@ -1,75 +1,75 @@
-#apiVersion: v1
-#kind: Namespace
-#metadata:
-#  name: vpn
-#
-#---
-#apiVersion: v1
-#kind: PersistentVolumeClaim
-#metadata:
-#  name: wg-easy-data
-#  namespace: vpn
-#spec:
-#  accessModes:
-#    - ReadWriteOnce
-#  resources:
-#    requests:
-#      storage: 1Gi
-#
-#---
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: wg-easy
-#  namespace: vpn
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      app: wg-easy
-#  template:
-#    metadata:
-#      labels:
-#        app: wg-easy
-#    spec:
-#      containers:
-#        - name: wg-easy
-#          image: weejewel/wg-easy
-#          env:
-#            - name: WG_HOST
-#              value: "31.172.141.158"
-#            - name: PASSWORD
-#              value: "amazonka"
-#          ports:
-#            - containerPort: 51820
-#              protocol: UDP
-#            - containerPort: 51821
-#              protocol: TCP
-#          securityContext:
-#            capabilities:
-#              add: ["NET_ADMIN", "SYS_MODULE"]
-#          volumeMounts:
-#            - mountPath: /etc/wireguard
-#              name: wg-easy-data
-#      volumes:
-#        - name: wg-easy-data
-#          persistentVolumeClaim:
-#            claimName: wg-easy-data
-#
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: wg-easy
-#  namespace: vpn
-#spec:
-#  selector:
-#    app: wg-easy
-#  type: LoadBalancer
-#  ports:
-#    - protocol: UDP
-#      port: 51820
-#      targetPort: 51820
-#    - protocol: TCP
-#      port: 51821
-#      targetPort: 51821
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vpn
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wg-easy-data
+  namespace: vpn
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wg-easy
+  namespace: vpn
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wg-easy
+  template:
+    metadata:
+      labels:
+        app: wg-easy
+    spec:
+      containers:
+        - name: wg-easy
+          image: weejewel/wg-easy
+          env:
+            - name: WG_HOST
+              value: "31.172.141.158"
+            - name: PASSWORD
+              value: "amazonka"
+          ports:
+            - containerPort: 51820
+              protocol: UDP
+            - containerPort: 51821
+              protocol: TCP
+          securityContext:
+            capabilities:
+              add: ["NET_ADMIN", "SYS_MODULE"]
+          volumeMounts:
+            - mountPath: /etc/wireguard
+              name: wg-easy-data
+      volumes:
+        - name: wg-easy-data
+          persistentVolumeClaim:
+            claimName: wg-easy-data
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wg-easy
+  namespace: vpn
+spec:
+  selector:
+    app: wg-easy
+  type: LoadBalancer
+  ports:
+    - protocol: UDP
+      port: 51820
+      targetPort: 51820
+    - protocol: TCP
+      port: 51821
+      targetPort: 51821
