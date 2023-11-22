@@ -1,62 +1,79 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: gitlab
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: gitlab-ce-deployment
-  namespace: gitlab
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: gitlab-ce
-  template:
-    metadata:
-      labels:
-        app: gitlab-ce
-    spec:
-      containers:
-        - name: gitlab-ce
-          image: gitlab/gitlab-ce:latest
-          ports:
-            - containerPort: 80
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: gitlab-ce-service
-  namespace: gitlab
-spec:
-  selector:
-    app: gitlab-ce
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-
----
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: gitlab-ce-ingress
-  namespace: gitlab
-spec:
-  rules:
-    - host: gitlab.suttyread.link
-      http:
-        paths:
-          - pathType: Prefix
-            path: "/"
-            backend:
-              service:
-                name: gitlab-ce-service
-                port:
-                  number: 80
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: gitlab
+#
+#---
+#
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: gitlab-admin-secret
+#  namespace: gitlab
+#type: Opaque
+#data:
+#  password: Z2l0bGFi
+#
+#---
+#
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: gitlab-ce-deployment
+#  namespace: gitlab
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: gitlab-ce
+#  template:
+#    metadata:
+#      labels:
+#        app: gitlab-ce
+#    spec:
+#      containers:
+#        - name: gitlab-ce
+#          image: gitlab/gitlab-ce:latest
+#          ports:
+#            - containerPort: 80
+#          env:
+#            - name: GITLAB_ROOT_PASSWORD
+#              valueFrom:
+#                secretKeyRef:
+#                  name: gitlab-admin-secret
+#                  key: password
+#
+#---
+#
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: gitlab-ce-service
+#  namespace: gitlab
+#spec:
+#  selector:
+#    app: gitlab-ce
+#  ports:
+#    - protocol: TCP
+#      port: 80
+#      targetPort: 80
+#
+#---
+#
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: gitlab-ce-ingress
+#  namespace: gitlab
+#spec:
+#  rules:
+#    - host: gitlab.suttyread.link
+#      http:
+#        paths:
+#          - pathType: Prefix
+#            path: "/"
+#            backend:
+#              service:
+#                name: gitlab-ce-service
+#                port:
+#                  number: 80
