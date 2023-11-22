@@ -4,7 +4,6 @@ metadata:
   name: nextcloud
 
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,18 +25,16 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: MYSQL_HOST
-              value: postgresql
+            - name: MYSQL_PASSWORD
+              value: YOUR_SECRET
             - name: MYSQL_DATABASE
               value: nextcloud
             - name: MYSQL_USER
               value: nextcloud
-            - name: MYSQL_PASSWORD
-              value: your_password_here
-          # Додайте інші налаштування Nextcloud за потребою.
+            - name: MYSQL_HOST
+              value: nextcloud-db
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -47,25 +44,25 @@ spec:
   selector:
     app: nextcloud
   ports:
-    - name: http
-      protocol: TCP
+    - protocol: TCP
       port: 80
       targetPort: 80
 
 ---
-
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: nextcloud-ingress
   namespace: nextcloud
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   rules:
-    - host: nextcloud.suttyread.link
+    - host: "nextcloud.suttyread.link"
       http:
         paths:
-          - pathType: Prefix
-            path: /
+          - path: /
+            pathType: Prefix
             backend:
               service:
                 name: nextcloud
@@ -73,31 +70,52 @@ spec:
                   number: 80
 
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nextcloud-pvc
+  namespace: nextcloud
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
 
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgresql
+  name: nextcloud-db
   namespace: nextcloud
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgresql
+      app: nextcloud-db
   template:
     metadata:
       labels:
-        app: postgresql
+        app: nextcloud-db
     spec:
       containers:
-        - name: postgresql
-          image: postgres:latest
-          env:
-            - name: POSTGRES_DB
-              value: nextcloud
-            - name: POSTGRES_USER
-              value: nextcloud
-            - name: POSTGRES_PASSWORD
-              value: your_password_here
+        - name: mysql
+          image: mysql:5.7
           ports:
-            - containerPort: 5432
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: YOUR_SECRET
+            - name: MYSQL_PASSWORD
+              value: YOUR_SECRET
+            - name: MYSQL_DATABASE
+              value: nextcloud
+            - name: MYSQL_USER
+              value: nextcloud
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: nextcloud-pvc
