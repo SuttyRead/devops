@@ -48,6 +48,10 @@ kind: Ingress
 metadata:
   name: nginx-ingress-service
   namespace: nginx
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.tls.certresolver: "myresolver"
 spec:
   rules:
     - host: nginx.suttyread.link
@@ -60,3 +64,6 @@ spec:
                 name: nginx-service
                 port:
                   number: 80
+  tls:
+    - hosts:
+        - nginx.suttyread.link
