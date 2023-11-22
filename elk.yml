@@ -135,7 +135,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: kibana.suttyread.link
+    - host: argocd.suttyread.link
       http:
         paths:
           - pathType: Prefix
