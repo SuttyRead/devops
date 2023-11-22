@@ -48,7 +48,13 @@ kind: Ingress
 metadata:
   name: nginx-ingress-service
   namespace: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: "le-cluster-issuer"
 spec:
+  tls:
+    - hosts:
+        - nginx.suttyread.link
+      secretName: nginx-tls-secret
   rules:
     - host: nginx.suttyread.link
       http:
