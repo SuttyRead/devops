@@ -56,7 +56,13 @@ metadata:
   namespace: nextcloud
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
+  tls:
+    - hosts:
+        - nextcloud.suttyread.link
+      secretName: app-tls
   rules:
     - host: "nextcloud.suttyread.link"
       http:
