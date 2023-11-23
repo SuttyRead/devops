@@ -78,7 +78,14 @@ kind: Ingress
 metadata:
   name: gitlab-ce-ingress
   namespace: gitlab
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
+  tls:
+    - hosts:
+        - gitlab.suttyread.link
+      secretName: app-tls
   rules:
     - host: gitlab.suttyread.link
       http:
