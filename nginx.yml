@@ -49,12 +49,13 @@ metadata:
   name: nginx-ingress-service
   namespace: nginx
   annotations:
-    cert-manager.io/cluster-issuer: "le-cluster-issuer"
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   tls:
     - hosts:
         - nginx.suttyread.link
-      secretName: nginx-tls-secret
+      secretName: app-tls
   rules:
     - host: nginx.suttyread.link
       http:
