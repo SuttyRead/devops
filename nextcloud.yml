@@ -142,3 +142,14 @@ spec:
       port: 3306
       targetPort: 3306
 
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: nextcloud-headers
+  namespace: nextcloud
+spec:
+  headers:
+    customRequestHeaders:
+      X-Forwarded-Proto: "https"
