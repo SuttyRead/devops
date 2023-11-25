@@ -1,137 +1,137 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: weblate
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: weblate
-  namespace: weblate
-spec:
-  type: NodePort
-  ports:
-    - port: 80
-      targetPort: 8080
-      nodePort: 31090
-  selector:
-    app: weblate
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: weblate
-  namespace: weblate
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: weblate
-  template:
-    metadata:
-      labels:
-        app: weblate
-    spec:
-      containers:
-      - name: weblate
-        image: weblate/weblate:latest
-        ports:
-        - containerPort: 8080
-        env:
-        - name: WEBLATE_SITE_DOMAIN
-          value: "weblate.suttyread.link"
-        - name: WEBLATE_ALLOWED_HOSTS
-          value: "*"
-        - name: POSTGRES_HOST
-          value: "weblate-postgres"
-        - name: POSTGRES_DATABASE  # Переконайтеся, що тут вказано ім'я вашої бази даних
-          value: "weblate"
-        - name: POSTGRES_USER
-          value: "weblate"
-        - name: POSTGRES_PASSWORD
-          value: "your-postgres-password"
-        - name: REDIS_HOST
-          value: "weblate-redis"
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: weblate-postgres
-  namespace: weblate
-spec:
-  ports:
-    - port: 5432
-  selector:
-    app: weblate-postgres
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: weblate-postgres
-  namespace: weblate
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: weblate-postgres
-  template:
-    metadata:
-      labels:
-        app: weblate-postgres
-    spec:
-      containers:
-      - name: weblate-postgres
-        image: postgres:latest
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_DB
-          value: "weblate"
-        - name: POSTGRES_USER
-          value: "weblate"
-        - name: POSTGRES_PASSWORD
-          value: "your-postgres-password"
-        volumeMounts:
-        - name: weblate-postgres-storage
-          mountPath: /var/lib/postgresql/data
-      volumes:
-      - name: weblate-postgres-storage
-        emptyDir: {}
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: weblate-redis
-  namespace: weblate
-spec:
-  ports:
-    - port: 6379
-  selector:
-    app: weblate-redis
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: weblate-redis
-  namespace: weblate
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: weblate-redis
-  template:
-    metadata:
-      labels:
-        app: weblate-redis
-    spec:
-      containers:
-      - name: weblate-redis
-        image: redis:latest
-        ports:
-        - containerPort: 6379
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: weblate
+#
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: weblate
+#  namespace: weblate
+#spec:
+#  type: NodePort
+#  ports:
+#    - port: 80
+#      targetPort: 8080
+#      nodePort: 31090
+#  selector:
+#    app: weblate
+#
+#---
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: weblate
+#  namespace: weblate
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: weblate
+#  template:
+#    metadata:
+#      labels:
+#        app: weblate
+#    spec:
+#      containers:
+#      - name: weblate
+#        image: weblate/weblate:latest
+#        ports:
+#        - containerPort: 8080
+#        env:
+#        - name: WEBLATE_SITE_DOMAIN
+#          value: "weblate.suttyread.link"
+#        - name: WEBLATE_ALLOWED_HOSTS
+#          value: "*"
+#        - name: POSTGRES_HOST
+#          value: "weblate-postgres"
+#        - name: POSTGRES_DATABASE  # Переконайтеся, що тут вказано ім'я вашої бази даних
+#          value: "weblate"
+#        - name: POSTGRES_USER
+#          value: "weblate"
+#        - name: POSTGRES_PASSWORD
+#          value: "your-postgres-password"
+#        - name: REDIS_HOST
+#          value: "weblate-redis"
+#
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: weblate-postgres
+#  namespace: weblate
+#spec:
+#  ports:
+#    - port: 5432
+#  selector:
+#    app: weblate-postgres
+#
+#---
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: weblate-postgres
+#  namespace: weblate
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: weblate-postgres
+#  template:
+#    metadata:
+#      labels:
+#        app: weblate-postgres
+#    spec:
+#      containers:
+#      - name: weblate-postgres
+#        image: postgres:latest
+#        ports:
+#        - containerPort: 5432
+#        env:
+#        - name: POSTGRES_DB
+#          value: "weblate"
+#        - name: POSTGRES_USER
+#          value: "weblate"
+#        - name: POSTGRES_PASSWORD
+#          value: "your-postgres-password"
+#        volumeMounts:
+#        - name: weblate-postgres-storage
+#          mountPath: /var/lib/postgresql/data
+#      volumes:
+#      - name: weblate-postgres-storage
+#        emptyDir: {}
+#
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: weblate-redis
+#  namespace: weblate
+#spec:
+#  ports:
+#    - port: 6379
+#  selector:
+#    app: weblate-redis
+#
+#---
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: weblate-redis
+#  namespace: weblate
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: weblate-redis
+#  template:
+#    metadata:
+#      labels:
+#        app: weblate-redis
+#    spec:
+#      containers:
+#      - name: weblate-redis
+#        image: redis:latest
+#        ports:
+#        - containerPort: 6379
