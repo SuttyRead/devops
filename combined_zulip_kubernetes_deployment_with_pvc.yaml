@@ -57,7 +57,12 @@ metadata:
   namespace: zulip
   annotations:
     kubernetes.io/ingress.class: "traefik"
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
+  tls:
+    - hosts:
+        - zulip.suttyread.link
+      secretName: app-tls
   rules:
   - host: zulip.suttyread.link
     http:
