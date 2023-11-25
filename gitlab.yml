@@ -1,101 +1,101 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: gitlab
-
----
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: gitlab-data
-  namespace: gitlab
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: gitlab-ce-deployment
-  namespace: gitlab
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: gitlab-ce
-  template:
-    metadata:
-      labels:
-        app: gitlab-ce
-    spec:
-      containers:
-        - name: gitlab-ce
-          image: gitlab/gitlab-ce:latest
-          ports:
-            - containerPort: 80
-          env:
-            - name: GITLAB_OMNIBUS_CONFIG
-              value: |
-                external_url 'http://gitlab.suttyread.link'
-          volumeMounts:
-            - mountPath: /etc/gitlab
-              name: gitlab-config
-            - mountPath: /var/opt/gitlab
-              name: gitlab-data
-      volumes:
-        - name: gitlab-config
-          emptyDir: {}
-        - name: gitlab-data
-          persistentVolumeClaim:
-            claimName: gitlab-data
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: gitlab-ce-service
-  namespace: gitlab
-spec:
-  selector:
-    app: gitlab-ce
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 80
-
----
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: gitlab-ce-ingress
-  namespace: gitlab
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-spec:
-  tls:
-    - hosts:
-        - gitlab.suttyread.link
-      secretName: app-tls
-  rules:
-    - host: gitlab.suttyread.link
-      http:
-        paths:
-          - pathType: Prefix
-            path: "/"
-            backend:
-              service:
-                name: gitlab-ce-service
-                port:
-                  number: 80
-
-# gitlab-rake 'gitlab:password:reset[root]'
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: gitlab
+#
+#---
+#
+#apiVersion: v1
+#kind: PersistentVolumeClaim
+#metadata:
+#  name: gitlab-data
+#  namespace: gitlab
+#spec:
+#  accessModes:
+#    - ReadWriteOnce
+#  resources:
+#    requests:
+#      storage: 10Gi
+#
+#---
+#
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: gitlab-ce-deployment
+#  namespace: gitlab
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: gitlab-ce
+#  template:
+#    metadata:
+#      labels:
+#        app: gitlab-ce
+#    spec:
+#      containers:
+#        - name: gitlab-ce
+#          image: gitlab/gitlab-ce:latest
+#          ports:
+#            - containerPort: 80
+#          env:
+#            - name: GITLAB_OMNIBUS_CONFIG
+#              value: |
+#                external_url 'http://gitlab.suttyread.link'
+#          volumeMounts:
+#            - mountPath: /etc/gitlab
+#              name: gitlab-config
+#            - mountPath: /var/opt/gitlab
+#              name: gitlab-data
+#      volumes:
+#        - name: gitlab-config
+#          emptyDir: {}
+#        - name: gitlab-data
+#          persistentVolumeClaim:
+#            claimName: gitlab-data
+#
+#---
+#
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: gitlab-ce-service
+#  namespace: gitlab
+#spec:
+#  selector:
+#    app: gitlab-ce
+#  ports:
+#    - name: http
+#      protocol: TCP
+#      port: 80
+#      targetPort: 80
+#
+#---
+#
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: gitlab-ce-ingress
+#  namespace: gitlab
+#  annotations:
+#    kubernetes.io/ingress.class: traefik
+#    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+#spec:
+#  tls:
+#    - hosts:
+#        - gitlab.suttyread.link
+#      secretName: app-tls
+#  rules:
+#    - host: gitlab.suttyread.link
+#      http:
+#        paths:
+#          - pathType: Prefix
+#            path: "/"
+#            backend:
+#              service:
+#                name: gitlab-ce-service
+#                port:
+#                  number: 80
+#
+## gitlab-rake 'gitlab:password:reset[root]'
