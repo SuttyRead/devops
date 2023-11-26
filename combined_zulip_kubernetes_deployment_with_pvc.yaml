@@ -85,6 +85,8 @@ spec:
               value: "zulip-redis"
             - name: SSL_CERTIFICATE_GENERATION
               value: "self-signed"
+            - name: SETTING_EXTERNAL_HOST
+              value: "zulip.suttyread.link"
             # Додайте інші необхідні змінні середовища та конфігурації
           ports:
             - containerPort: 80
