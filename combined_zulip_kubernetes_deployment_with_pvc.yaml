@@ -106,15 +106,30 @@ spec:
             - name: ZULIP_USER_PASS
               value: "123456789"
             - name: SECRETS_secret_key
-              value: "enVsaXA="
+              valueFrom:
+                secretKeyRef:
+                  name: zulip-secrets
+                  key: REDIS_PASSWORD
             - name: SECRETS_postgres_password
-              value: "enVsaXA="
+              valueFrom:
+                secretKeyRef:
+                  name: zulip-secrets
+                  key: REDIS_PASSWORD
             - name: SECRETS_memcached_password
-              value: "enVsaXA="
+              valueFrom:
+                secretKeyRef:
+                  name: zulip-secrets
+                  key: REDIS_PASSWORD
             - name: SECRETS_rabbitmq_password
-              value: "enVsaXA="
+              valueFrom:
+                secretKeyRef:
+                  name: zulip-secrets
+                  key: REDIS_PASSWORD
             - name: SECRETS_redis_password
-              value: "enVsaXA="
+              valueFrom:
+                secretKeyRef:
+                  name: zulip-secrets
+                  key: REDIS_PASSWORD
           ports:
             - containerPort: 80
           volumeMounts:
@@ -153,12 +168,12 @@ metadata:
   namespace: zulip
   annotations:
     kubernetes.io/ingress.class: traefik
-#    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
-#  tls:
-#    - hosts:
-#        - zulip.suttyread.link
-#      secretName: app-tls
+  tls:
+    - hosts:
+        - zulip.suttyread.link
+      secretName: app-tls
   rules:
     - host: zulip.suttyread.link
       http:
