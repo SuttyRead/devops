@@ -1,0 +1,59 @@
+# Replace each occurrence of "set-secure-password" with a different random
+# password and uncomment it.
+# Replace each occurrence of "zulip.example.com" with the domain you want Zulip
+# to be reached on.
+
+zulip:
+  # password: set-secure-password
+
+  # Add any other environment variables you want to configure here.
+  # based on; https://github.com/zulip/docker-zulip/blob/master/docker-compose.yml#L63
+  # these values will be merged with db secrets and hosts/ports
+  environment:
+    # Domain
+    SETTING_EXTERNAL_HOST: zulip.suttyread.link
+    ZULIP_AUTH_BACKENDS: 'EmailAuthBackend'
+
+    # SMTP settings
+    SECRETS_email_password: '123456789'
+    SETTING_ZULIP_ADMINISTRATOR: 'admin@example.com'
+    SETTING_EMAIL_HOST: ''  # e.g. smtp.example.com
+    SETTING_EMAIL_HOST_USER: 'noreply@example.com'
+    SETTING_EMAIL_PORT: '587'
+    SETTING_EMAIL_USE_SSL: 'False'
+    SETTING_EMAIL_USE_TLS: 'True'
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"  # Використовуйте той самий issuer, що і для nginx
+  hosts:
+    - host: zulip.suttyread.link
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: app-tls  # Використовуйте той самий TLS Secret, що і для nginx, або вкажіть новий
+      hosts:
+        - zulip.suttyread.link
+
+memcached:
+   memcachedPassword: zulip
+
+rabbitmq:
+  auth:
+     password: zulip
+     erlangCookie: zulip
+
+redis:
+  auth:
+     password: zulip
+
+postgresql:
+  auth:
+     # postgres admin user password
+     postgresqlPassword: zulip
+     # postgres zulip user password
+     password: zulip
+
