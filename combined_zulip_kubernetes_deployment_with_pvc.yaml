@@ -83,6 +83,8 @@ spec:
               value: "zulip-db"
             - name: REDIS_HOST
               value: "zulip-redis"
+            - name: SSL_CERTIFICATE_GENERATION
+              value: "self-signed"
             # Додайте інші необхідні змінні середовища та конфігурації
           ports:
             - containerPort: 80
@@ -122,12 +124,12 @@ metadata:
   namespace: zulip
   annotations:
     kubernetes.io/ingress.class: traefik
-    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+#    cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
-  tls:
-    - hosts:
-        - zulip.suttyread.link
-      secretName: app-tls
+#  tls:
+#    - hosts:
+#        - zulip.suttyread.link
+#      secretName: app-tls
   rules:
     - host: zulip.suttyread.link
       http:
