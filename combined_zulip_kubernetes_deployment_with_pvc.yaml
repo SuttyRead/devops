@@ -88,10 +88,10 @@ spec:
             - containerPort: 80
           volumeMounts:
             - name: cert-volume
-              mountPath: /etc/zulip/certificates/zulip.key
+              mountPath: /data/zulip.key
               subPath: tls.key
             - name: cert-volume
-              mountPath: /etc/zulip/certificates/zulip.crt
+              mountPath: /data/zulip.crt
               subPath: tls.crt
       volumes:
         - name: cert-volume
