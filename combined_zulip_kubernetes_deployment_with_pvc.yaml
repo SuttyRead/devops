@@ -1,241 +1,241 @@
-#apiVersion: v1
-#kind: Namespace
-#metadata:
-#  name: zulip
-#
-#---
-#
-#apiVersion: v1
-#kind: Secret
-#metadata:
-#  name: zulip-secrets
-#  namespace: zulip
-#type: Opaque
-#data:
-#  DATABASE_PASSWORD: "enVsaXA="  # Замініть це реальним закодованим паролем
-#  REDIS_PASSWORD: "enVsaXA="     # Замініть це реальним закодованим паролем
-#  RABBITMQ_PASSWORD: "enVsaXA="  # Замініть це реальним закодованим паролем
-#
-#---
-#
-#apiVersion: v1
-#kind: PersistentVolumeClaim
-#metadata:
-#  name: zulip-pv-claim
-#  namespace: zulip
-#spec:
-#  accessModes:
-#    - ReadWriteOnce
-#  resources:
-#    requests:
-#      storage: 10Gi
-#
-#---
-#
-#apiVersion: v1
-#kind: PersistentVolumeClaim
-#metadata:
-#  name: postgres-pv-claim
-#  namespace: zulip
-#spec:
-#  accessModes:
-#    - ReadWriteOnce
-#  resources:
-#    requests:
-#      storage: 5Gi
-#
-#---
-#
-#apiVersion: v1
-#kind: PersistentVolumeClaim
-#metadata:
-#  name: redis-pv-claim
-#  namespace: zulip
-#spec:
-#  accessModes:
-#    - ReadWriteOnce
-#  resources:
-#    requests:
-#      storage: 2Gi
-#
-#---
-#
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: zulip
-#  namespace: zulip
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      app: zulip
-#  template:
-#    metadata:
-#      labels:
-#        app: zulip
-#    spec:
-#      containers:
-#        - name: zulip
-#          image: zulip/docker-zulip:latest
-#          env:
-#            - name: DB_HOST
-#              value: "zulip-db"
-#            - name: REDIS_HOST
-#              value: "zulip-redis"
-#            # Додайте інші необхідні змінні середовища та конфігурації
-#          ports:
-#            - containerPort: 80
-#          volumeMounts:
-#            - name: cert-volume
-#              mountPath: /etc/zulip/certificates/zulip.key
-#              subPath: tls.key
-#            - name: cert-volume
-#              mountPath: /etc/zulip/certificates/zulip.crt
-#              subPath: tls.crt
-#      volumes:
-#        - name: cert-volume
-#          secret:
-#            secretName: app-tls
-#
-#---
-#
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: zulip
-#  namespace: zulip
-#spec:
-#  selector:
-#    app: zulip
-#  ports:
-#    - protocol: TCP
-#      port: 80
-#      targetPort: 80
-#
-#---
-#
-#apiVersion: networking.k8s.io/v1
-#kind: Ingress
-#metadata:
-#  name: zulip-ingress
-#  namespace: zulip
-#  annotations:
-#    kubernetes.io/ingress.class: traefik
-#    cert-manager.io/cluster-issuer: "letsencrypt-staging"
-#spec:
-#  tls:
-#    - hosts:
-#        - zulip.suttyread.link
-#      secretName: app-tls
-#  rules:
-#    - host: zulip.suttyread.link
-#      http:
-#        paths:
-#          - path: /
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: zulip
-#                port:
-#                  number: 80
-#
-#---
-#
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: zulip-db
-#  namespace: zulip
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      app: zulip-db
-#  template:
-#    metadata:
-#      labels:
-#        app: zulip-db
-#    spec:
-#      containers:
-#        - name: postgres
-#          image: postgres:latest
-#          env:
-#            - name: POSTGRES_DB
-#              value: zulip
-#            - name: POSTGRES_USER
-#              value: zulip
-#            - name: POSTGRES_PASSWORD
-#              valueFrom:
-#                secretKeyRef:
-#                  name: zulip-secrets
-#                  key: DATABASE_PASSWORD
-#          ports:
-#            - containerPort: 5432
-#          volumeMounts:
-#            - mountPath: /var/lib/postgresql/data
-#              name: postgres-storage
-#      volumes:
-#        - name: postgres-storage
-#          persistentVolumeClaim:
-#            claimName: postgres-pv-claim
-#
-#---
-#
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: zulip-db
-#  namespace: zulip
-#spec:
-#  selector:
-#    app: zulip-db
-#  ports:
-#    - protocol: TCP
-#      port: 5432
-#      targetPort: 5432
-#
-#---
-#
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: zulip-redis
-#  namespace: zulip
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      app: zulip-redis
-#  template:
-#    metadata:
-#      labels:
-#        app: zulip-redis
-#    spec:
-#      containers:
-#        - name: redis
-#          image: redis:latest
-#          ports:
-#            - containerPort: 6379
-#          volumeMounts:
-#            - mountPath: /data
-#              name: redis-storage
-#      volumes:
-#        - name: redis-storage
-#          persistentVolumeClaim:
-#            claimName: redis-pv-claim
-#
-#---
-#
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: zulip-redis
-#  namespace: zulip
-#spec:
-#  selector:
-#    app: zulip-redis
-#  ports:
-#    - protocol: TCP
-#      port: 6379
-#      targetPort: 6379
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zulip
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: zulip-secrets
+  namespace: zulip
+type: Opaque
+data:
+  DATABASE_PASSWORD: "enVsaXA="  # Замініть це реальним закодованим паролем
+  REDIS_PASSWORD: "enVsaXA="     # Замініть це реальним закодованим паролем
+  RABBITMQ_PASSWORD: "enVsaXA="  # Замініть це реальним закодованим паролем
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zulip-pv-claim
+  namespace: zulip
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pv-claim
+  namespace: zulip
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pv-claim
+  namespace: zulip
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zulip
+  namespace: zulip
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zulip
+  template:
+    metadata:
+      labels:
+        app: zulip
+    spec:
+      containers:
+        - name: zulip
+          image: zulip/docker-zulip:latest
+          env:
+            - name: DB_HOST
+              value: "zulip-db"
+            - name: REDIS_HOST
+              value: "zulip-redis"
+            # Додайте інші необхідні змінні середовища та конфігурації
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: cert-volume
+              mountPath: /etc/zulip/certificates/zulip.key
+              subPath: tls.key
+            - name: cert-volume
+              mountPath: /etc/zulip/certificates/zulip.crt
+              subPath: tls.crt
+      volumes:
+        - name: cert-volume
+          secret:
+            secretName: app-tls
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: zulip
+  namespace: zulip
+spec:
+  selector:
+    app: zulip
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: zulip-ingress
+  namespace: zulip
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+spec:
+  tls:
+    - hosts:
+        - zulip.suttyread.link
+      secretName: app-tls
+  rules:
+    - host: zulip.suttyread.link
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: zulip
+                port:
+                  number: 80
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zulip-db
+  namespace: zulip
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zulip-db
+  template:
+    metadata:
+      labels:
+        app: zulip-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          env:
+            - name: POSTGRES_DB
+              value: zulip
+            - name: POSTGRES_USER
+              value: zulip
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: zulip-secrets
+                  key: DATABASE_PASSWORD
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-storage
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: zulip-db
+  namespace: zulip
+spec:
+  selector:
+    app: zulip-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zulip-redis
+  namespace: zulip
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zulip-redis
+  template:
+    metadata:
+      labels:
+        app: zulip-redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:latest
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - mountPath: /data
+              name: redis-storage
+      volumes:
+        - name: redis-storage
+          persistentVolumeClaim:
+            claimName: redis-pv-claim
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: zulip-redis
+  namespace: zulip
+spec:
+  selector:
+    app: zulip-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
