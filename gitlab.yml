@@ -170,7 +170,7 @@ spec:
   tls:
     - hosts:
         - registry.gitlab.suttyread.link
-      secretName: app-tls
+      secretName: registry-app-tls
   rules:
     - host: registry.gitlab.suttyread.link
       http:
