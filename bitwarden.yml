@@ -59,8 +59,12 @@ metadata:
     kubernetes.io/ingress.class: traefik
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
+  tls:
+    - hosts:
+        - bitwarden.suttyread.link
+      secretName: app-tls
   rules:
-    - host: "bitwarden.suttyread.link"
+    - host: bitwarden.suttyread.link
       http:
         paths:
           - path: /
