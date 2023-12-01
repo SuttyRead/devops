@@ -23,6 +23,13 @@ spec:
       containers:
         - name: bitwarden
           image: bitwardenrs/server:latest # Будьте уважні з вибором образу
+          env:
+            - name: OIDC_CLIENT_ID
+              value: "bitwarden"
+            - name: OIDC_CLIENT_SECRET
+              value: "NXVGOEtdSXz1tMcuKoKBJuISqwq1pSRm"
+            - name: OIDC_DISCOVERY_URL
+              value: "https://keycloak.suttyread.link/realms/master/.well-known/openid-configuration"
           ports:
             - containerPort: 80
           volumeMounts:
