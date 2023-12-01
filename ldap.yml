@@ -31,10 +31,7 @@ spec:
             - name: LDAP_DOMAIN
               value: "ldap.suttyread.link"
             - name: LDAP_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: ldap-admin-password
-                  key: password
+              value: "ldappassword"
           volumeMounts:
             - name: ldap-data
               mountPath: /var/lib/ldap
