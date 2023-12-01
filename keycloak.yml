@@ -99,6 +99,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: keycloak
+  namespace: keycloak
   labels:
     app: keycloak
 spec:
@@ -143,13 +144,13 @@ spec:
           ports:
             - name: http
               containerPort: 8080
-#          volumeMounts:
-#            - name: keycloak-storage
-#              mountPath: /opt/keycloak/data
-#      volumes:
-#        - name: keycloak-storage
-#          persistentVolumeClaim:
-#            claimName: keycloak-pvc
+          volumeMounts:
+            - name: keycloak-storage
+              mountPath: /opt/keycloak/data
+      volumes:
+        - name: keycloak-storage
+          persistentVolumeClaim:
+            claimName: keycloak-pvc
 
 ---
 
