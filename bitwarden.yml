@@ -29,7 +29,7 @@ spec:
             - name: OIDC_CLIENT_SECRET
               value: "EJihC7eGBBQJ3YLpWaBS6bcthO64Z9BnXSBMX1xw9hxpqr76atw7sxUKeNtVesgNR3kC3T0tT2ihZ4J82UDT19jE8DffqNzyV2DrZPJwditJVAmqRZJF9C491ZzzPxad"
             - name: OIDC_DISCOVERY_URL
-              value: "https://authentik.suttyread.link/.well-known/openid-configuration"
+              value: "http://authentik.suttyread.link/application/o/bitwarden/.well-known/openid-configuration"
           ports:
             - containerPort: 80
           volumeMounts:
