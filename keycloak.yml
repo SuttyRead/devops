@@ -118,6 +118,8 @@ spec:
             - -Dkeycloak.profile.feature.upload_scripts=enabled
             - -Dquarkus.http.proxy-address-forwarding=true # включити проксі forwarding
           env:
+            - name: KC_HOSTNAME
+              value: "keycloak.suttyread.link"
             - name: KC_DB
               value: postgres
             - name: KC_DB_URL
