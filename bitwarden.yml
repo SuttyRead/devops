@@ -5,57 +5,57 @@ metadata:
 
 ---
 
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: bitwarden
-#  namespace: bitwarden
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      app: bitwarden
-#  template:
-#    metadata:
-#      labels:
-#        app: bitwarden
-#    spec:
-#      containers:
-#        - name: bitwarden
-#          image: bitwardenrs/server:latest # Будьте уважні з вибором образу
-#          env:
-#            - name: OIDC_CLIENT_ID
-#              value: "NjGQyihMIfXnxlqUxGEoVEENMsRUHSs8UsMHFZVE"
-#            - name: OIDC_CLIENT_SECRET
-#              value: "EJihC7eGBBQJ3YLpWaBS6bcthO64Z9BnXSBMX1xw9hxpqr76atw7sxUKeNtVesgNR3kC3T0tT2ihZ4J82UDT19jE8DffqNzyV2DrZPJwditJVAmqRZJF9C491ZzzPxad"
-#            - name: OIDC_DISCOVERY_URL
-#              value: "http://authentik.suttyread.link/application/o/bitwarden/.well-known/openid-configuration"
-#          ports:
-#            - containerPort: 80
-#          volumeMounts:
-#            - mountPath: /data
-#              name: bitwarden-data
-#      volumes:
-#        - name: bitwarden-data
-#          persistentVolumeClaim:
-#            claimName: bitwarden-data-pvc
-#
-#---
-#
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: bitwarden
-#  namespace: bitwarden
-#spec:
-#  selector:
-#    app: bitwarden
-#  ports:
-#    - protocol: TCP
-#      port: 80
-#      targetPort: 80
-#
-#---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bitwarden
+  namespace: bitwarden
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bitwarden
+  template:
+    metadata:
+      labels:
+        app: bitwarden
+    spec:
+      containers:
+        - name: bitwarden
+          image: bitwardenrs/server:latest # Будьте уважні з вибором образу
+          env:
+            - name: OIDC_CLIENT_ID
+              value: "NjGQyihMIfXnxlqUxGEoVEENMsRUHSs8UsMHFZVE"
+            - name: OIDC_CLIENT_SECRET
+              value: "EJihC7eGBBQJ3YLpWaBS6bcthO64Z9BnXSBMX1xw9hxpqr76atw7sxUKeNtVesgNR3kC3T0tT2ihZ4J82UDT19jE8DffqNzyV2DrZPJwditJVAmqRZJF9C491ZzzPxad"
+            - name: OIDC_DISCOVERY_URL
+              value: "http://authentik.suttyread.link/application/o/bitwarden/.well-known/openid-configuration"
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /data
+              name: bitwarden-data
+      volumes:
+        - name: bitwarden-data
+          persistentVolumeClaim:
+            claimName: bitwarden-data-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: bitwarden
+  namespace: bitwarden
+spec:
+  selector:
+    app: bitwarden
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -83,15 +83,15 @@ spec:
                   number: 80
 
 ---
-#
-#apiVersion: v1
-#kind: PersistentVolumeClaim
-#metadata:
-#  name: bitwarden-data-pvc
-#  namespace: bitwarden
-#spec:
-#  accessModes:
-#    - ReadWriteOnce
-#  resources:
-#    requests:
-#      storage: 10Gi # Розмір може варіюватися в залежності від ваших потреб
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bitwarden-data-pvc
+  namespace: bitwarden
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi # Розмір може варіюватися в залежності від ваших потреб
