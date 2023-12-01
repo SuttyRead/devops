@@ -114,7 +114,7 @@ spec:
     spec:
       containers:
         - name: keycloak
-          image: quay.io/keycloak/keycloak:23.0.1
+          image: quay.io/keycloak/keycloak:20.0.2
           args: ["start", "--cache-stack=kubernetes"]
           env:
             - name: KEYCLOAK_ADMIN
@@ -141,7 +141,11 @@ spec:
               value: "keycloak"
             - name: KC_DB_PASSWORD
               value: "password"
+            - name: jgroups.dns.query
+              value: keycloak
           ports:
+            - name: jgroups
+              containerPort: 7600
             - name: http
               containerPort: 8080
           volumeMounts:
