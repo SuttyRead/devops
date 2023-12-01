@@ -148,3 +148,28 @@
 #                port:
 #                  number: 80
 #
+
+
+#cat <<EOF | helm upgrade --install authentik authentik/authentik -f -
+#authentik:
+#  secret_key: "PleaseGenerateA50CharKey"
+#  error_reporting:
+#    enabled: true
+#  postgresql:
+#    password: "ThisIsNotASecurePassword"
+#
+#ingress:
+#  ingressClassName: traefik # замініть на traefik або kong залежно від вашого інгрес контролера
+#  enabled: true
+#  hosts:
+#    - host: authentik.suttyread.link
+#      paths:
+#        - path: "/"
+#          pathType: Prefix
+#
+#postgresql:
+#  enabled: true
+#  postgresqlPassword: "ThisIsNotASecurePassword"
+#redis:
+#  enabled: true
+#EOF
