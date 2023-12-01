@@ -1,89 +1,132 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: ldap
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: openldap
-  namespace: ldap
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: openldap
-  template:
-    metadata:
-      labels:
-        app: openldap
-    spec:
-      containers:
-        - name: openldap
-          image: osixia/openldap:latest
-          ports:
-            - containerPort: 389
-          env:
-            - name: LDAP_ORGANISATION
-              value: "suttyread"
-            - name: LDAP_DOMAIN
-              value: "ldap.suttyread.link"
-            - name: LDAP_ADMIN_PASSWORD
-              value: "ldappassword"
-          volumeMounts:
-            - name: ldap-data
-              mountPath: /var/lib/ldap
-            - name: ldap-config
-              mountPath: /etc/ldap/slapd.d
-      volumes:
-        - name: ldap-data
-          persistentVolumeClaim:
-            claimName: ldap-data-pvc
-        - name: ldap-config
-          persistentVolumeClaim:
-            claimName: ldap-config-pvc
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: openldap
-  namespace: ldap
-spec:
-  type: LoadBalancer
-  ports:
-    - port: 10389
-      targetPort: 389
-  selector:
-    app: openldap
-
----
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: ldap-data-pvc
-  namespace: ldap
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-
----
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: ldap-config-pvc
-  namespace: ldap
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: ldap
+#
+#---
+#
+#apiVersion: v1
+#kind: PersistentVolumeClaim
+#metadata:
+#  name: ldap-data-pvc
+#  namespace: ldap
+#spec:
+#  accessModes:
+#    - ReadWriteOnce
+#  resources:
+#    requests:
+#      storage: 1Gi
+#
+#---
+#
+#apiVersion: v1
+#kind: PersistentVolumeClaim
+#metadata:
+#  name: ldap-config-pvc
+#  namespace: ldap
+#spec:
+#  accessModes:
+#    - ReadWriteOnce
+#  resources:
+#    requests:
+#      storage: 1Gi
+#
+#---
+#
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: openldap
+#  namespace: ldap
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: openldap
+#  template:
+#    metadata:
+#      labels:
+#        app: openldap
+#    spec:
+#      containers:
+#        - name: openldap
+#          image: osixia/openldap:latest
+#          ports:
+#            - containerPort: 389
+#          env:
+#            - name: LDAP_ORGANISATION
+#              value: "suttyread"
+#            - name: LDAP_DOMAIN
+#              value: "ldap.suttyread.link"
+#            - name: LDAP_ADMIN_PASSWORD
+#              value: "ldappassword"
+#          volumeMounts:
+#            - name: ldap-data
+#              mountPath: /var/lib/ldap
+#            - name: ldap-config
+#              mountPath: /etc/ldap/slapd.d
+#      volumes:
+#        - name: ldap-data
+#          persistentVolumeClaim:
+#            claimName: ldap-data-pvc
+#        - name: ldap-config
+#          persistentVolumeClaim:
+#            claimName: ldap-config-pvc
+#
+#---
+#
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: openldap
+#  namespace: ldap
+#spec:
+#  type: ClusterIP
+#  ports:
+#    - port: 389
+#      protocol: TCP
+#      targetPort: 389
+#  selector:
+#    app: openldap
+#
+#---
+#
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: phpldapadmin
+#  namespace: ldap
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: phpldapadmin
+#  template:
+#    metadata:
+#      labels:
+#        app: phpldapadmin
+#    spec:
+#      containers:
+#        - name: phpldapadmin
+#          image: osixia/phpldapadmin:latest
+#          env:
+#            - name: PHPLDAPADMIN_LDAP_HOSTS
+#              value: "openldap.ldap.svc.cluster.local" # Коректне ім'я хоста LDAP
+#          ports:
+#            - containerPort: 80
+#              name: http
+#---
+#
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: phpldapadmin-service
+#  namespace: ldap
+#spec:
+#  type: NodePort # або LoadBalancer якщо ви хочете використати зовнішній IP
+#  ports:
+#    - port: 80
+#      targetPort: http
+#      nodePort: 31000 # Опційно. Використовуйте тільки для типу NodePort
+#  selector:
+#    app: phpldapadmin
