@@ -113,7 +113,7 @@ spec:
     spec:
       containers:
         - name: keycloak
-          image: quay.io/keycloak/keycloak:21.1.1
+          image: quay.io/keycloak/keycloak:23.0.1
           args: ["start", "--cache-stack=kubernetes"]
           env:
             - name: KEYCLOAK_ADMIN
@@ -150,7 +150,6 @@ spec:
         - name: keycloak-storage
           persistentVolumeClaim:
             claimName: keycloak-pvc
-
 
 ---
 
