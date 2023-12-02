@@ -54,7 +54,7 @@ metadata:
 spec:
   tls:
     - hosts:
-        - nextcloud.sutty.shop
+        - nginx.sutty.shop
       secretName: app-tls
   rules:
     - host: nginx.sutty.shop
