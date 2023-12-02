@@ -1,0 +1,6 @@
+namespace: mailu
+helm:
+  releaseName: mailu
+  chart: ./mailu
+  values:
+    - ./mailu/values.yaml
