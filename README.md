@@ -22,6 +22,7 @@ helm repo add authentik https://charts.goauthentik.io
 helm repo update
 kubectl create namespace authentik
 helm upgrade --install authentik authentik/authentik -n authentik -f authentik.yaml
+# https://<ingress-host-name>/if/flow/initial-setup/
 ```
 
 mailu setup
