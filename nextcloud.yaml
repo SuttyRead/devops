@@ -73,8 +73,7 @@ metadata:
   name: nextcloud-ingress
   namespace: nextcloud
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    kubernetes.io/ingress.class: traefik
+    kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
   tls:
