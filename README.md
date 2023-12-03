@@ -29,9 +29,17 @@ mailu setup
 ```
 # https://github.com/Mailu/helm-charts/blob/master/mailu/README.md
 helm repo add mailu https://mailu.github.io/helm-charts/
+helm repo update
 kubectl create namespace mailu-mailserver
 helm upgrade --install mailu mailu/mailu -n mailu-mailserver --values mailu.yaml
 ```
 
-
+nextcloud setup
+```
+https://github.com/nextcloud/helm/blob/main/charts/nextcloud/README.md
+helm repo add nextcloud https://nextcloud.github.io/helm/
+helm repo update
+helm show values nextcloud/nextcloud > nextcloud-values.yaml
+helm install nextcloud nextcloud/nextcloud -n nextcloud -f nextcloud-values.yaml
+```
 
