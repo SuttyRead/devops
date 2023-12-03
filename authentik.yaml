@@ -8,11 +8,17 @@ authentik:
 ingress:
   ingressClassName: nginx
   enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
   hosts:
     - host: authentik.sutty.shop
       paths:
         - path: "/"
           pathType: Prefix
+  tls:
+    - hosts:
+        - authentik.sutty.shop
+      secretName: authentik-tls
 
 postgresql:
   enabled: true
