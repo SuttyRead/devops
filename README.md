@@ -20,17 +20,16 @@ authentik setup
 # https://goauthentik.io/docs/installation/kubernetes
 helm repo add authentik https://charts.goauthentik.io
 helm repo update
-helm upgrade --install authentik authentik/authentik -f authentik.yml
+kubectl create namespace authentik
+helm upgrade --install authentik authentik/authentik -n authentik -f authentik.yaml
 ```
-
 
 mailu setup
 ```
 # https://github.com/Mailu/helm-charts/blob/master/mailu/README.md
 helm repo add mailu https://mailu.github.io/helm-charts/
-helm show values mailu/mailu > mailu.yml
-helm install mailu mailu/mailu -n mailu-mailserver --values mailu.yml
-helm upgrade mailu mailu/mailu -n mailu-mailserver --values mailu.yml
+kubectl create namespace mailu-mailserver
+helm upgrade --install mailu mailu/mailu -n mailu-mailserver --values mailu.yaml
 ```
 
 
