@@ -31,7 +31,7 @@ mailu setup
 helm repo add mailu https://mailu.github.io/helm-charts/
 helm repo update
 kubectl create namespace mailu-mailserver
-helm upgrade --install mailu mailu/mailu -n mailu-mailserver --values mailu.yaml
+helm upgrade --install mailu mailu/mailu -n mailu-mailserver --values mailu/mailu.yaml
 ```
 
 nextcloud setup
@@ -40,6 +40,16 @@ https://github.com/nextcloud/helm/blob/main/charts/nextcloud/README.md
 helm repo add nextcloud https://nextcloud.github.io/helm/
 helm repo update
 helm show values nextcloud/nextcloud > nextcloud-values.yaml
-helm install nextcloud nextcloud/nextcloud -n nextcloud -f nextcloud-values.yaml
+kubectl create namespace nextcloud
+helm upgrade --install nextcloud nextcloud/nextcloud -n nextcloud -f nextcloud-values.yaml
+```
+
+gitlab-ce setup
+```
+helm show values gitlab/gitlab > gitlab-values-old.yaml
+kubectl create namespace gitlab
+helm upgrade --install gitlab gitlab/gitlab -n gitlab -f gitlab-values-new.yaml
+
+change gitlab shell from clusterIp to LoadBalancer
 ```
 

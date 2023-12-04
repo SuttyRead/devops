@@ -1,0 +1,23 @@
+global:
+  edition: ce
+  hosts:
+    domain: sutty.shop
+  appConfig:
+    omniauth:
+      enabled: true
+      allowSingleSignOn: ['saml']
+      autoLinkSamlUser: true
+      providers:
+        - secret: gitlab-saml-settings
+          key: provider
+
+certmanager-issuer:
+  email: suttyread@gmail.com
+certmanager:
+  install: false
+gitlab-runner:
+  runners:
+    privileged: true
+
+nginx-ingress:
+  enabled: false

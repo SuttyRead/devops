@@ -3,7 +3,7 @@
 ##
 image:
   repository: nextcloud
-  # tag: 24.0.3-apache
+  tag: stable
   pullPolicy: IfNotPresent
   # pullSecrets:
   #   - myRegistrKeySecretName
@@ -25,8 +25,8 @@ ingress:
   className: nginx
   annotations:
   #  nginx.ingress.kubernetes.io/proxy-body-size: 4G
-  #  kubernetes.io/tls-acme: "true"
-    cert-manager.io/cluster-issuer: letsencrypt-staging
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   #  nginx.ingress.kubernetes.io/server-snippet: |-
   #    server_tokens off;
   #    proxy_hide_header X-Powered-By;
@@ -51,10 +51,10 @@ ingress:
   #    location ~ ^/(?:autotest|occ|issue|indie|db_|console) {
   #      deny all;
   #    }
-  # tls:
-  #   - secretName: nextcloud-tls
-  #     hosts:
-  #       - nextcloud.kube.home
+  tls:
+    - secretName: nextcloud-tls
+      hosts:
+        - nextcloud.sutty.shop
   labels: {}
   path: /
   pathType: Prefix
@@ -91,16 +91,16 @@ nextcloud:
   persistence:
     subPath:
   mail:
-    enabled: false
+    enabled: true
     fromAddress: user
-    domain: domain.com
+    domain: mailu.sutty.shop
     smtp:
-      host: domain.com
+      host: mailu.sutty.shop
       secure: ssl
       port: 465
       authtype: LOGIN
-      name: user
-      password: pass
+      name: nextcloud
+      password: s4zHbEJp(k&BF4s2
   # PHP Configuration files
   # Will be injected in /usr/local/etc/php/conf.d for apache image and in /usr/local/etc/php-fpm.d when nginx.enabled: true
   phpConfigs: {}
@@ -124,7 +124,12 @@ nextcloud:
     smtp.config.php: true
   # Extra config files created in /var/www/html/config/
   # ref: https://docs.nextcloud.com/server/15/admin_manual/configuration_server/config_sample_php_parameters.html#multiple-config-php-file
-  configs: {}
+  configs:
+    overwriteprotocol.config.php: |-
+      <?php
+      $CONFIG = array (
+        'overwriteprotocol' => 'https',
+      );
 
   # For example, to use S3 as primary storage
   # ref: https://docs.nextcloud.com/server/13/admin_manual/configuration_files/primary_storage.html#simple-storage-service-s3
@@ -303,7 +308,7 @@ mariadb:
 ## for more options see https://github.com/bitnami/charts/tree/main/bitnami/postgresql
 ##
 postgresql:
-  enabled: false
+  enabled: true
   global:
     postgresql:
       # global.postgresql.auth overrides postgresql.auth
@@ -323,10 +328,12 @@ postgresql:
           replicationPasswordKey: ""
   primary:
     persistence:
-      enabled: false
+      enabled: true
       # Use an existing Persistent Volume Claim (must be created ahead of time)
       # existingClaim: ""
       # storageClass: ""
+      accessMode: ReadWriteOnce
+      size: 10Gi
 
 ##
 ## Redis chart configuration
@@ -334,7 +341,7 @@ postgresql:
 ##
 
 redis:
-  enabled: false
+  enabled: true
   auth:
     enabled: true
     password: 'changeme'
@@ -378,7 +385,7 @@ service:
 ##
 persistence:
   # Nextcloud Data (/var/www/html)
-  enabled: false
+  enabled: true
   annotations: {}
   ## nextcloud data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
