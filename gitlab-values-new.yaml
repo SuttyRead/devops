@@ -10,6 +10,35 @@ global:
       providers:
         - secret: gitlab-saml-settings
           key: provider
+  smtp:
+    enabled: true
+    address: mailu.sutty.shop
+    port: 465
+    user_name: "gitlab"
+    ## https://docs.gitlab.com/charts/installation/secrets#smtp-password
+    password:
+      secret: "smtp"
+      key: password
+    # domain:
+    authentication: "plain"
+    starttls_auto: false
+    openssl_verify_mode: "peer"
+    open_timeout: 30
+    read_timeout: 60
+    pool: false
+
+  ## https://docs.gitlab.com/charts/charts/globals#outgoing-email
+  ## Email persona used in email sent by GitLab
+  email:
+    from: "gitlab@sutty.shop"
+    display_name: GitLab
+    reply_to: ""
+    subject_suffix: ""
+    smime:
+      enabled: false
+      secretName: ""
+      keyName: "tls.key"
+      certName: "tls.crt"
 
 certmanager-issuer:
   email: suttyread@gmail.com

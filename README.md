@@ -40,6 +40,7 @@ https://github.com/nextcloud/helm/blob/main/charts/nextcloud/README.md
 helm repo add nextcloud https://nextcloud.github.io/helm/
 helm repo update
 helm show values nextcloud/nextcloud > nextcloud-values.yaml
+helm show values nextcloud-aio/nextcloud-aio-helm-chart > nextcloud-aio-values.yaml
 kubectl create namespace nextcloud
 helm upgrade --install nextcloud nextcloud/nextcloud -n nextcloud -f nextcloud-values.yaml
 ```
@@ -53,3 +54,40 @@ helm upgrade --install gitlab gitlab/gitlab -n gitlab -f gitlab-values-new.yaml
 change gitlab shell from clusterIp to LoadBalancer
 ```
 
+keycloak codecentric
+```
+helm repo add codecentric https://codecentric.github.io/helm-charts
+helm repo update
+kubectl create namespace keycloak
+helm show values codecentric/keycloak > keycloak-values.yaml
+helm upgrade --install keycloak codecentric/keycloak --namespace keycloak -f keycloak-values.yaml
+```
+
+keycloak codecentric
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+kubectl create namespace keycloak
+helm show values bitnami/keycloak > keycloak-values.yaml
+helm upgrade --install keycloak bitnami/keycloak --namespace keycloak -f keycloak-values.yaml
+helm uninstall keycloak bitnami/keycloak -n keycloak
+```
+
+openLdap
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+kubectl create namespace ldap
+helm show values bitnami/openldap > openLdap-values.yaml
+helm upgrade --install ldap bitnami/openldap --namespace ldap -f openLdap-values.yaml
+```
+
+bitnami/odoo
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+kubectl create namespace odoo
+helm show values bitnami/odoo > odoo.yaml
+helm upgrade --install odoo bitnami/odoo --namespace odoo -f odoo.yaml
+helm uninstall odoo bitnami/odoo --namespace odoo
+```

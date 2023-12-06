@@ -1,0 +1,9 @@
+ingress:
+  enabled: true
+  ingressClassName: "nginx"
+  hostname: keycloak.sutty.shop
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+  tls: true
+
+proxy: edge
