@@ -51,6 +51,95 @@ spec:
               value: "testuser"
             - name: ORANGEHRM_DATABASE_PASSWORD
               value: "testpassword"
+          volumeMounts:
+            - mountPath: /bitnami/orangehrm
+              name: orangehrm-volume
+      volumes:
+        - name: orangehrm-volume
+          persistentVolumeClaim:
+            claimName: orangehrm-pvc
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: orangehrm-pvc
+  namespace: orangehrm
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  namespace: orangehrm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+    app: mariadb
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  namespace: orangehrm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb:10.5
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "rootpassword"
+            - name: MYSQL_DATABASE
+              value: "orangehrm"
+            - name: MYSQL_USER
+              value: "testuser"
+            - name: MYSQL_PASSWORD
+              value: "testpassword"
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mariadb-volume
+      volumes:
+        - name: mariadb-volume
+          persistentVolumeClaim:
+            claimName: mariadb-pvc
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb-pvc
+  namespace: orangehrm
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
 
 ---
 
