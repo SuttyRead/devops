@@ -108,6 +108,7 @@ spec:
       containers:
         - name: mysql
           image: mysql:5.7
+          args: ["--sql-mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES"]
           ports:
             - containerPort: 3306
           env:
