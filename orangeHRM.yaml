@@ -37,7 +37,7 @@ spec:
     spec:
       containers:
         - name: orangehrm
-          image: bitnami/orangehrm:latest
+          image: orangehrm/orangehrm:latest
           ports:
             - containerPort: 80
           env:
