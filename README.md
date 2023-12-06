@@ -91,3 +91,11 @@ helm show values bitnami/odoo > odoo.yaml
 helm upgrade --install odoo bitnami/odoo --namespace odoo -f odoo.yaml
 helm uninstall odoo bitnami/odoo --namespace odoo
 ```
+
+orangeHRM
+```
+helm repo add stable https://charts.helm.sh/stable
+helm repo update
+helm show values stable/orangehrm > orange-stable.yaml
+helm install my-release stable/orangehrm
+```
