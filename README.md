@@ -96,6 +96,7 @@ orangeHRM
 ```
 helm repo add stable https://charts.helm.sh/stable
 helm repo update
+kubectl create namespace orangehrm
 helm show values stable/orangehrm > orange-stable.yaml
-helm install my-release stable/orangehrm
+helm upgrade --install orangehrm stable/orangehrm -f orange-stable.yaml
 ```
