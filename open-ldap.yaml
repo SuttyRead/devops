@@ -88,7 +88,7 @@ metadata:
   name: phpldapadmin
   namespace: ldap
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - port: 80
       targetPort: 80
@@ -121,3 +121,30 @@ spec:
           env:
             - name: PHPLDAPADMIN_LDAP_HOSTS
               value: openldap.ldap
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: phpldapadmin-ingress
+  namespace: ldap
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+spec:
+  rules:
+    - host: openldap.sutty.shop
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: phpldapadmin
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - openldap.sutty.shop
+      secretName: ldap-tls
