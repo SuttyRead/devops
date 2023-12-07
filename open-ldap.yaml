@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ldap-namespace
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ldap-pvc
+  namespace: ldap-namespace
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openldap
+  namespace: ldap-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openldap
+  template:
+    metadata:
+      labels:
+        app: openldap
+    spec:
+      containers:
+        - name: openldap
+          image: osixia/openldap:1.5.0
+          ports:
+            - containerPort: 389
+            - containerPort: 636
+          volumeMounts:
+            - name: ldap-data
+              mountPath: /var/lib/ldap
+            - name: ldap-config
+              mountPath: /etc/ldap/slapd.d
+      volumes:
+        - name: ldap-data
+          persistentVolumeClaim:
+            claimName: ldap-pvc
+        - name: ldap-config
+          persistentVolumeClaim:
+            claimName: ldap-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: openldap
+  namespace: ldap-namespace
+spec:
+  type: ClusterIP
+  ports:
+    - port: 389
+      targetPort: 389
+    - port: 636
+      targetPort: 636
+  selector:
+    app: openldap
