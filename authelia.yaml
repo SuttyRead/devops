@@ -113,11 +113,14 @@ data:
     default_redirection_url: https://authelia.sutty.shop
 
     authentication_backend:
-      disable_reset_password: false
+      reset_password:
+        disable: false
       refresh_interval: 5m
       ldap:
         url: ldap://authelia.sutty.shop
-        skip_verify: false
+        tls:
+          skip:
+            verify: false
         base_dn: dc=sutty,dc=shop
         additional_users_dn: ou=users
         users_filter: (&({username_attribute}={input})(objectClass=person))
