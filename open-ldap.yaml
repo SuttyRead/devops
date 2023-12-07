@@ -1,71 +1,81 @@
-#apiVersion: v1
-#kind: Namespace
-#metadata:
-#  name: ldap-namespace
-#
-#---
-#
-#apiVersion: v1
-#kind: PersistentVolumeClaim
-#metadata:
-#  name: ldap-pvc
-#  namespace: ldap-namespace
-#spec:
-#  accessModes:
-#    - ReadWriteOnce
-#  resources:
-#    requests:
-#      storage: 5Gi
-#
-#---
-#
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: openldap
-#  namespace: ldap-namespace
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      app: openldap
-#  template:
-#    metadata:
-#      labels:
-#        app: openldap
-#    spec:
-#      containers:
-#        - name: openldap
-#          image: osixia/openldap:1.5.0
-#          ports:
-#            - containerPort: 389
-#            - containerPort: 636
-#          volumeMounts:
-#            - name: ldap-data
-#              mountPath: /var/lib/ldap
-#            - name: ldap-config
-#              mountPath: /etc/ldap/slapd.d
-#      volumes:
-#        - name: ldap-data
-#          persistentVolumeClaim:
-#            claimName: ldap-pvc
-#        - name: ldap-config
-#          persistentVolumeClaim:
-#            claimName: ldap-pvc
-#
-#---
-#
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: openldap
-#  namespace: ldap-namespace
-#spec:
-#  type: ClusterIP
-#  ports:
-#    - port: 389
-#      targetPort: 389
-#    - port: 636
-#      targetPort: 636
-#  selector:
-#    app: openldap
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ldap
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: openldap-pvc
+  namespace: ldap
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openldap
+  namespace: ldap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openldap
+  template:
+    metadata:
+      labels:
+        app: openldap
+    spec:
+      containers:
+        - name: openldap
+          image: bitnami/openldap:latest
+          ports:
+            - containerPort: 1389
+            - containerPort: 1636
+          env:
+            - name: LDAP_ADMIN_USERNAME
+              value: "admin"
+            - name: LDAP_ADMIN_PASSWORD
+              value: "adminpassword"
+            - name: LDAP_USERS
+              value: "user1,user2"
+            - name: LDAP_PASSWORDS
+              value: "password1,password2"
+            - name: LDAP_ORGANISATION
+              value: "MyOrg"
+            - name: LDAP_DOMAIN
+              value: "example.org"
+          volumeMounts:
+            - name: ldap-data
+              mountPath: /bitnami/openldap
+      volumes:
+        - name: ldap-data
+          persistentVolumeClaim:
+            claimName: openldap-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: openldap
+  namespace: ldap
+spec:
+  type: ClusterIP
+  ports:
+    - port: 1389
+      targetPort: 1389
+      name: ldap
+    - port: 1636
+      targetPort: 1636
+      name: ldaps
+  selector:
+    app: openldap
