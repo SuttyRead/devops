@@ -52,7 +52,7 @@ spec:
             - name: LDAP_ORGANISATION
               value: "suttyshop"
             - name: LDAP_DOMAIN
-              value: "ldap.sutty.shop"
+              value: "openldap.sutty.shop"
           volumeMounts:
             - name: ldap-data
               mountPath: /bitnami/openldap
