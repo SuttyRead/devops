@@ -104,9 +104,11 @@ metadata:
   namespace: authelia
 data:
   configuration.yml: |
-    host: 0.0.0.0
-    port: 9091
-    log_level: info
+    server:
+      host: 0.0.0.0
+      port: 9091
+    log:
+      level: info
     jwt_secret: your_jwt_secret
     default_redirection_url: https://authelia.sutty.shop
 
@@ -147,6 +149,7 @@ data:
     storage:
       local:
         path: /var/lib/authelia/db.sqlite3
+        encryption_key: your_encryption_key
     
     notifier:
       filesystem:
