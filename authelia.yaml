@@ -41,7 +41,7 @@ spec:
             - containerPort: 9091
           volumeMounts:
             - name: config
-              mountPath: /etc/authelia
+              mountPath: /config
             - name: storage
               mountPath: /var/lib/authelia
       volumes:
