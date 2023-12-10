@@ -23,7 +23,8 @@ spec:
           image: registry.sutty.shop/hello-world-image:latest
           ports:
             - containerPort: 8080
-
+      imagePullSecrets:
+        - name: my-registry-credentials
 ---
 
 apiVersion: v1
