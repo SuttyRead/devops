@@ -1,4 +1,19 @@
-## Default values for mailu.
+OIDC_ENABLED: true
+# OpenID Connect Provider configuration URL
+OIDC_PROVIDER_INFO_URL: https://authentik.sutty.shop/application/o/mailu/.well-known/openid-configuration
+# OpenID redirect URL if HOSTNAME not matching your login url
+OIDC_REDIRECT_URL: https://mailu.sutty.shop
+# OpenID Connect Client id
+OIDC_CLIENT_ID: byFNnwONts7rzsfwuXcAE23ZPQABZGuNaIjTkNOj
+# OpenID Connect Client secret
+OIDC_CLIENT_SECRET: Hho2FbOZzXZIqrmGa3Vn0oApR83HqCMhv1W2Jah0hXX1I8pR6Cfz25DEbWEJcs5KZBQnAkoMiJHUHH0rDGQ5LEVAUI62RQKM2F2ZznA7GPIjn1cXm1JXLV4TvifDwruG
+# Display text for OpenID Connect login button. Default: OpenID Connect
+OIDC_BUTTON_NAME: OpenID Connect
+OIDC_VERIFY_SSL: True
+OIDC_CHANGE_PASSWORD_REDIRECT_ENABLED: true
+OIDC_CHANGE_PASSWORD_REDIRECT_URL: https://authentik.sutty.shop/pw-change
+
+  ## Default values for mailu.
 
 ## @section Global parameters
 ## Global common parameters (see Bitnamis common chart)
@@ -121,7 +136,7 @@ networkPolicy:
         app.kubernetes.io/component: controller
 
 ## @param mailuVersion Override Mailu version to be deployed (tag of mailu images). Defaults to `Chart.AppVersion` - must be master or a version >= 2.0
-mailuVersion: ""
+mailuVersion: "master"
 
 ## @param logLevel default log level. can be overridden globally or per service
 logLevel: WARNING
@@ -612,10 +627,10 @@ ingress:
 ## ref: https://mailu.io/master/configuration.html#header-authentication-using-an-external-proxy
 proxyAuth:
   ## @param proxyAuth.whitelist Comma separated list of CIDRs of proxies to trust for authentication
-  whitelist: "176.37.196.107/32"
+  whitelist:
 
   ## @param proxyAuth.header HTTP header containing the email address of the user to authenticate
-  header: "X-authentik-email"
+  header:
 
   ## @param proxyAuth.create Whether non-existing accounts should be auto-created
   create: "false"
@@ -630,7 +645,7 @@ front:
   ## @param front.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param front.image.pullPolicy Pod image pull policy
   image:
-    repository: mailu/nginx
+    repository: heviat/nginx
     tag: ""
     pullPolicy: IfNotPresent
 
@@ -863,7 +878,7 @@ admin:
   ## @param admin.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param admin.image.pullPolicy Pod image pull policy
   image:
-    repository: mailu/admin
+    repository: heviat/admin
     tag: ""
     pullPolicy: IfNotPresent
 
@@ -1099,7 +1114,7 @@ postfix:
   ## @param postfix.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param postfix.image.pullPolicy Pod image pull policy
   image:
-    repository: mailu/postfix
+    repository: heviat/postfix
     tag: ""
     pullPolicy: IfNotPresent
 
@@ -1310,7 +1325,7 @@ dovecot:
   ## @param dovecot.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param dovecot.image.pullPolicy Pod image pull policy
   image:
-    repository: mailu/dovecot
+    repository: heviat/dovecot
     tag: ""
     pullPolicy: IfNotPresent
 
@@ -1535,7 +1550,7 @@ rspamd:
   ## @param rspamd.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param rspamd.image.pullPolicy Pod image pull policy
   image:
-    repository: mailu/rspamd
+    repository: heviat/rspamd
     tag: ""
     pullPolicy: IfNotPresent
 
@@ -1733,7 +1748,7 @@ clamav:
   ## @param clamav.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param clamav.image.pullPolicy Pod image pull policy
   image:
-    repository: mailu/clamav
+    repository: heviat/clamav
     tag: ""
     pullPolicy: IfNotPresent
 
@@ -1976,7 +1991,7 @@ webmail:
   ## @param webmail.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param webmail.image.pullPolicy Pod image pull policy
   image:
-    repository: mailu/webmail
+    repository: heviat/webmail
     tag: ""
     pullPolicy: IfNotPresent
 
@@ -2173,7 +2188,7 @@ webdav:
   ## @param webdav.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param webdav.image.pullPolicy Pod image pull policy
   image:
-    repository: mailu/radicale
+    repository: heviat/radicale
     tag: ""
     pullPolicy: IfNotPresent
 
@@ -2373,7 +2388,7 @@ fetchmail:
   ## @param fetchmail.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param fetchmail.image.pullPolicy Pod image pull policy
   image:
-    repository: mailu/fetchmail
+    repository: heviat/fetchmail
     tag: ""
     pullPolicy: IfNotPresent
 
@@ -2570,7 +2585,7 @@ oletools:
   ## @param oletools.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param oletools.image.pullPolicy Pod image pull policy
   image:
-    repository: mailu/oletools
+    repository: heviat/oletools
     tag: ""
     pullPolicy: IfNotPresent
 

@@ -31,7 +31,7 @@ mailu setup
 helm repo add mailu https://mailu.github.io/helm-charts/
 helm repo update
 kubectl create namespace mailu-mailserver
-helm upgrade --install mailu mailu/mailu -n mailu-mailserver --values mailu/mailu.yaml
+helm upgrade --install mailu mailu/mailu -n mailu-mailserver --values mailu.yaml
 ```
 
 nextcloud setup
@@ -99,4 +99,12 @@ helm repo update
 kubectl create namespace orangehrm
 helm show values stable/orangehrm > orange-stable.yaml
 helm upgrade --install orangehrm stable/orangehrm -f orange-stable.yaml
+```
+
+docker mail server
+```
+kubectl create namespace mail
+helm show values docker-mailserver/docker-mailserver > docker-mail.yaml
+helm upgrade --install docker-mailserver docker-mailserver/docker-mailserver -n mail --values docker-mail.yaml 
+
 ```

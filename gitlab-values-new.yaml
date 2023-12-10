@@ -10,43 +10,46 @@ global:
       providers:
         - secret: gitlab-saml-settings
           key: provider
-  smtp:
-    enabled: true
-    address: mailu.sutty.shop
-    port: 465
-    user_name: "gitlab"
-    ## https://docs.gitlab.com/charts/installation/secrets#smtp-password
-    password:
-      secret: "smtp"
-      key: password
-    # domain:
-    authentication: "plain"
-    starttls_auto: false
-    openssl_verify_mode: "peer"
-    open_timeout: 30
-    read_timeout: 60
-    pool: false
 
-  ## https://docs.gitlab.com/charts/charts/globals#outgoing-email
-  ## Email persona used in email sent by GitLab
-  email:
-    from: "gitlab@sutty.shop"
-    display_name: GitLab
-    reply_to: ""
-    subject_suffix: ""
-    smime:
-      enabled: false
-      secretName: ""
-      keyName: "tls.key"
-      certName: "tls.crt"
 
 certmanager-issuer:
   email: suttyread@gmail.com
 certmanager:
   install: false
-gitlab-runner:
-  runners:
-    privileged: true
+#gitlab-runner:
+#  install: true
+#  runners:
+#    privileged: true
+#    config: |
+#      [[runners]]
+#        name = "Kubernetes Runner"
+#        executor = "kubernetes"
+#        privileged = true
+#        [runners.kubernetes]
+#          namespace = "gitlab"
+#          [[runners.kubernetes.volumes.host_path]]
+#            name = "docker"
+#            mount_path = "/var/run/docker.sock"
+#            read_only = false
+#            [[runners.kubernetes.volumes.host_path]]
+#              name = "buildah"
+#              mount_path = "/var/lib/containers/"
+#              read_only = false
 
 nginx-ingress:
   enabled: false
+
+#ldap:
+#  preventSignin: true
+#  servers:
+#    # 'main' is the GitLab 'provider ID' of this LDAP server
+#    main:
+#      label: 'LDAP'
+#      host: '192.168.31.193'
+#      port: 389
+#      uid: 'username'
+#      bind_dn: 'cn=ldapservice,ou=users,DC=ldap,DC=goauthentik,DC=io'
+#      base: 'DC=ldap,DC=goauthentik,DC=io'
+#      password:
+#        secret: my-ldap-password-secret
+#        key: the-key-containing-the-password
