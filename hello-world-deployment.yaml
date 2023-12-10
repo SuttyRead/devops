@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: hello-world
-          image: registry.sutty.shop/hello-world:latest
+          image: registry.sutty.shop/backend/hello-world:latest
           ports:
             - containerPort: 8080
       imagePullSecrets:
