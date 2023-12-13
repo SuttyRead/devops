@@ -1,4 +1,4 @@
-namespace: nginx
+#namespace: nginx
 helm:
   releaseName: nginx
   chart: stable/nginx
