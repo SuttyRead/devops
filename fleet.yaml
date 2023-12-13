@@ -1,4 +1,4 @@
-namespace: sample-helm2
+namespace: sample-helm
 # Custom helm options
 helm:
   # The release name to use. If empty a generated release name will be used
@@ -16,4 +16,4 @@ helm:
   timeoutSeconds: 0
   # Custom values that will be passed as values.yaml to the installation
   values:
-    replicaCount: 1
+    replicaCount: 2
