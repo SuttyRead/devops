@@ -1,12 +1,8 @@
-#apiVersion: fleet.cattle.io/v1alpha1
-#kind: HelmChart
-#metadata:
-#  name: nginx
-#  namespace: nginx-helm
-#spec:
-#  chart: nginx
-#  repo: https://charts.bitnami.com/bitnami
-#  targetNamespace: nginx
-#  values:
-#    service:
-#      type: LoadBalancer
+namespace: nginx
+helm:
+  releaseName: nginx
+  chart: stable/nginx
+  repo: https://charts.helm.sh/stable
+  values:
+    set:
+      key: value
