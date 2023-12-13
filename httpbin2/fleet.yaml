@@ -2,7 +2,7 @@ namespace: sample-helm2
 # Custom helm options
 helm:
   # The release name to use. If empty a generated release name will be used
-  releaseName: httpbin
+  releaseName: httpbin2
   # The directory of the chart in the repo.
   chart: "github.com/twingao/httpbin"
   # An https to a valid Helm repository to download the chart from
