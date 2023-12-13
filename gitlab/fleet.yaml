@@ -4,6 +4,8 @@ helm:
   chart: https://gitlab.com/gitlab-org/charts/gitlab/-/tree/master/charts/gitlab
   repo: ""
   version: "master"
+  force: false
+  timeoutSeconds: 0
   values:
     global:
       edition: ce
