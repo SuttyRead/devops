@@ -1,4 +1,4 @@
-namespace: sample-helm
+namespace: sample-helm2
 # Custom helm options
 helm:
   # The release name to use. If empty a generated release name will be used
