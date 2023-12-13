@@ -1,8 +1,0 @@
-namespace: nginx
-helm:
-  releaseName: nginx
-  chart: stable/nginx
-  repo: https://charts.helm.sh/stable
-  values:
-    set:
-      key: value
