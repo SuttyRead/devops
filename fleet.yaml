@@ -10,7 +10,7 @@ helm:
   # Used if repo is set to look up the version of the chart
   version: "master"
   # Force recreate resource that can not be updated
-  force: false
+  force: true
   # For how long Helm waits  the release to be active. If the value
   # is less than or equal to zero, we will not wait in Helm
   timeoutSeconds: 0
