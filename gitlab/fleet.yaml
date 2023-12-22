@@ -1,5 +1,4 @@
 defaultNamespace: gitlab
-namespace: gitlab
 helm:
   releaseName: gitlab
   chart: "gitlab"
