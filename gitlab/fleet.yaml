@@ -10,3 +10,9 @@ helm:
       edition: ce
       hosts:
         domain: sutty.shop
+    certmanager-issuer:
+      email: suttyread@gmail.com
+    certmanager:
+      install: false
+    nginx-ingress:
+      enabled: false
