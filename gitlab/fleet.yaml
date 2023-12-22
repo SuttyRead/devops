@@ -3,7 +3,7 @@ helm:
   releaseName: gitlab
   chart: "gitlab"
   repo: "https://charts.gitlab.io"
-  version: ""
+  version: "7.6.1"
   force: true
   values:
     global:
