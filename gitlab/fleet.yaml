@@ -3,9 +3,8 @@ helm:
   releaseName: gitlab
   chart: "gitlab/gitlab"
   repo: "https://charts.gitlab.io/"
-  version: "latest"
-  force: false
-  timeoutSeconds: 0
+  version: ""
+  force: true
   values:
     global:
       edition: ce
