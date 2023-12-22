@@ -1,3 +1,4 @@
+defaultNamespace: default
 namespace: gitlab
 helm:
   releaseName: gitlab
