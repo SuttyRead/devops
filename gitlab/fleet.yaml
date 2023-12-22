@@ -1,4 +1,4 @@
-defaultNamespace: default
+defaultNamespace: gitlab
 helm:
   releaseName: gitlab
   chart: "gitlab"
