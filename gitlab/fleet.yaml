@@ -1,8 +1,8 @@
 namespace: gitlab
 helm:
   releaseName: gitlab
-  chart: "gitlab/gitlab"
-  repo: "https://charts.gitlab.io/"
+  chart: "gitlab"
+  repo: "https://charts.gitlab.io"
   version: ""
   force: true
   values:
