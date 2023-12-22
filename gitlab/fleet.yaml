@@ -1,9 +1,9 @@
 namespace: gitlab
 helm:
   releaseName: gitlab
-  chart: "gitlab.com/gitlab-org/charts/gitlab"
+  chart: "gitlab/gitlab"
   repo: ""
-  version: "master"
+  version: "latest"
   force: false
   timeoutSeconds: 0
   values:
