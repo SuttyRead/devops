@@ -1,0 +1,68 @@
+version: '3.6'
+services:
+  gitlab:
+    image: 'gitlab/gitlab-ce:latest'
+    restart: unless-stopped
+    hostname: 'gitlab.sutty.shop'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        registry_external_url 'https://registry.sutty.shop'
+        external_url 'https://gitlab.sutty.shop'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2224
+        letsencrypt['contact_emails'] = ['suttyread@gmail.com']
+        gitlab_rails['ldap_enabled'] = true
+                gitlab_rails['ldap_servers'] = {
+                  'main' => {
+                    'label' => 'LDAP',
+                    'host' =>  'authentik.sutty.shop',
+                    'port' => 389,
+                    'uid' => 'cn',
+                    'bind_dn' => 'cn=ldapservice,ou=users,DC=ldap,DC=goauthentik,DC=io',
+                    'password' => 'ldapservice',
+                    'encryption' => 'plain',
+                    'verify_certificates' => false,
+                    'timeout' => 10,
+                    'active_directory' => false,
+                    'user_filter' => '(&(objectClass=user)(memberOf=cn=backend,ou=groups,dc=ldap,dc=goauthentik,dc=io))',
+                    'base' => 'dc=ldap,dc=goauthentik,dc=io',
+                    'lowercase_usernames' => 'false',
+                    'retry_empty_result_with_codes' => [80],
+                    'allow_username_or_email_login' => false,
+                    'block_auto_created_users' => false
+                  }
+                }
+                gitlab_rails['omniauth_enabled'] = true
+                gitlab_rails['omniauth_allow_single_sign_on'] = ['saml']
+                gitlab_rails['omniauth_sync_email_from_provider'] = 'saml'
+                gitlab_rails['omniauth_sync_profile_from_provider'] = ['saml']
+                gitlab_rails['omniauth_sync_profile_attributes'] = ['email']
+                gitlab_rails['omniauth_auto_sign_in_with_provider'] = 'saml'
+                gitlab_rails['omniauth_block_auto_created_users'] = false
+                gitlab_rails['omniauth_auto_link_saml_user'] = true
+                gitlab_rails['omniauth_providers'] = [
+                {
+                  name: 'saml',
+                  args: {
+                    assertion_consumer_service_url: 'https://gitlab.sutty.shop/users/auth/saml/callback',
+                    idp_cert_fingerprint: 'e8:2e:e7:ff:6b:04:ff:01:5d:04:be:c5:76:4b:23:01:35:89:7c:49',
+                    idp_sso_target_url: 'https://authentik.sutty.shop/application/saml/gitlab/sso/binding/redirect/',
+                    issuer: 'https://gitlab.sutty.shop',
+                    name_identifier_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
+                    attribute_statements: {
+                      email: ['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
+                      first_name: ['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
+                      nickname: ['http://schemas.goauthentik.io/2021/02/saml/username']
+                    }
+                  },
+                  label: 'authentik'
+                }
+              ]
+    ports:
+      - '80:80'
+      - '2224:22'
+      - '443:443'
+    volumes:
+      - '$GITLAB_HOME/config:/etc/gitlab'
+      - '$GITLAB_HOME/logs:/var/log/gitlab'
+      - '$GITLAB_HOME/data:/var/opt/gitlab'
+    shm_size: '256m'

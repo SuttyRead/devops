@@ -15,6 +15,12 @@ cert-manager setup
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.2/cert-manager.yaml
 ```
 
+argocd
+```
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+```
+
 authentik setup
 ```
 # https://goauthentik.io/docs/installation/kubernetes

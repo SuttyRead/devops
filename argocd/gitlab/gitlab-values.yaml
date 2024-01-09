@@ -1,0 +1,55 @@
+global:
+  edition: ce
+  hosts:
+    domain: sutty.shop
+#  appConfig:
+#    omniauth:
+#      enabled: true
+#      allowSingleSignOn: ['saml']
+#      autoLinkSamlUser: true
+#      providers:
+#        - secret: gitlab-saml-settings
+#          key: provider
+
+
+certmanager-issuer:
+  email: suttyread@gmail.com
+certmanager:
+  install: false
+#gitlab-runner:
+#  install: true
+#  runners:
+#    privileged: true
+#    config: |
+#      [[runners]]
+#        name = "Kubernetes Runner"
+#        executor = "kubernetes"
+#        privileged = true
+#        [runners.kubernetes]
+#          namespace = "gitlab"
+#          [[runners.kubernetes.volumes.host_path]]
+#            name = "docker"
+#            mount_path = "/var/run/docker.sock"
+#            read_only = false
+#            [[runners.kubernetes.volumes.host_path]]
+#              name = "buildah"
+#              mount_path = "/var/lib/containers/"
+#              read_only = false
+
+nginx-ingress:
+  enabled: false
+
+#ldap:
+#  preventSignin: true
+#  servers:
+#    # 'main' is the GitLab 'provider ID' of this LDAP server
+#    main:
+#      label: 'LDAP'
+#      host: '192.168.31.193'
+#      port: 389
+#      uid: 'username'
+#      bind_dn: 'cn=ldapservice,ou=users,DC=ldap,DC=goauthentik,DC=io'
+#      base: 'DC=ldap,DC=goauthentik,DC=io'
+#      password:
+#        secret: my-ldap-password-secret
+#        key: the-key-containing-the-password

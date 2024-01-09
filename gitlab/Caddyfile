@@ -1,0 +1,9 @@
+https://gitlab.sutty.shop:443 {
+    header Strict-Transport-Security max-age=31536000;
+    reverse_proxy localhost:8929
+}
+
+https://registry.sutty.shop:443 {
+    header Strict-Transport-Security max-age=31536000;
+    reverse_proxy localhost:5000
+}
